@@ -1,0 +1,42 @@
+.fw-bold {
+font-weight: 700 !important;
+}
+
+.fw-medium {
+font-weight: 600 !important;
+}
+
+.fw-semi-bold {
+font-weight: 500 !important;
+}
+
+.back-to-top {
+position: fixed;
+display: none;
+right: 30px;
+bottom: 30px;
+z-index: 99;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-on-bg-primary {
+  color: $light !important; // atau gunakan $light jika sudah didefinisikan
+}
+.text-on-bg-secondary {
+  color: $dark !important; // atau gunakan $dark jika sudah didefinisikan
+}
+.text-on-bg-warning {
+  color: $dark !important;
+}
+.text-on-bg-success {
+  color: $light !important;
+}
+.text-on-bg-danger {
+  color: $light !important;
+}
+.text-on-bg-info {
+  color: $dark !important;
+}
