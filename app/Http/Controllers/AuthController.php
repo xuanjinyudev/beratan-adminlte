@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -21,13 +23,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $adminEmail = 'naya@gmail.com'; // Ganti dengan email admin kamu
-
-        if ($request->email !== $adminEmail) {
-            return back()->withErrors(['email' => 'Akses hanya untuk admin!']);
-        }
-
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (Auth::guard('admin')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended('/admin/dashboard');
         }
@@ -37,25 +33,39 @@ class AuthController extends Controller
         ]);
     }
 
-    //Proses Register
+    // Show register form
+    public function showRegisterForm()
+    {
+        return view('admin.auth.register');
+    }
+
+    // Proses Register admin
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:50|unique:admins,username',
+            'email' => 'required|string|email|max:255|unique:admins,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Simpan data user baru ke database (logika pendaftaran)
-        // ...
+        $admin = Admin::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+    // Login the admin after registration using admin guard
+    Auth::guard('admin')->login($admin);
+
+        return redirect()->intended('/admin/dashboard')->with('success', 'Registrasi berhasil!');
     }
 
     // Proses logout
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');

@@ -57,25 +57,52 @@
         </div>
         <div class="card-body register-card-body">
           <p class="register-box-msg">Register a new membership</p>
-          <form action="{{ route('register') }}" method="get">
+          @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+          @endif
+          @if($errors->any())
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+          <form action="{{ route('register') }}" method="post">
+            @csrf
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="registerFullName" type="text" class="form-control" placeholder="" />
+                <input id="registerFullName" name="name" type="text" class="form-control" placeholder="" value="{{ old('name') }}" />
                 <label for="registerFullName">Full Name</label>
               </div>
               <div class="input-group-text"><span class="bi bi-person"></span></div>
             </div>
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="registerEmail" type="email" class="form-control" placeholder="" />
+                <input id="registerUsername" name="username" type="text" class="form-control" placeholder="" value="{{ old('username') }}" />
+                <label for="registerUsername">Username</label>
+              </div>
+              <div class="input-group-text"><span class="bi bi-person-badge"></span></div>
+            </div>
+            <div class="input-group mb-1">
+              <div class="form-floating">
+                <input id="registerEmail" name="email" type="email" class="form-control" placeholder="" value="{{ old('email') }}" />
                 <label for="registerEmail">Email</label>
               </div>
               <div class="input-group-text"><span class="bi bi-envelope"></span></div>
             </div>
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="registerPassword" type="password" class="form-control" placeholder="" />
+                <input id="registerPassword" name="password" type="password" class="form-control" placeholder="" />
                 <label for="registerPassword">Password</label>
+              </div>
+              <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
+            </div>
+            <div class="input-group mb-1">
+              <div class="form-floating">
+                <input id="registerPasswordConfirm" name="password_confirmation" type="password" class="form-control" placeholder="" />
+                <label for="registerPasswordConfirm">Confirm Password</label>
               </div>
               <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
             </div>
@@ -91,7 +118,7 @@
               </div>
               <!-- /.col -->
               <div class="d-grid gap-2 text-center my-4">
-                <button type="submit" class="btn btn-primary text-white">Sign In</button>
+                <button type="submit" class="btn btn-primary text-white">Register</button>
               </div>
               <!-- /.col -->
             </div>

@@ -57,11 +57,23 @@
         </div>
         <div class="card-body login-card-body">
           <p class="login-box-msg">Login Untuk Akses Dashboard</p>
+          @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+          @endif
+          @if($errors->any())
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
           <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="input-group mb-1">
               <div class="form-floating">
-                <input id="loginEmail" name="email" type="email" class="form-control" required autofocus />
+                <input id="loginEmail" name="email" type="email" class="form-control" required autofocus value="{{ old('email') }}" />
                 <label for="loginEmail">Email</label>
               </div>
               <div class="input-group-text"><span class="bi bi-envelope"></span></div>
@@ -77,7 +89,7 @@
             <div class="row">
               <div class="col-8 d-inline-flex align-items-center">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                  <input class="form-check-input" type="checkbox" name="remember" value="1" id="flexCheckDefault" {{ old('remember') ? 'checked' : '' }} />
                   <label class="form-check-label" for="flexCheckDefault"> Remember Me </label>
                 </div>
               </div>
